@@ -12,3 +12,11 @@ This is in contrast to other distributed testing frameworks, which attempt to ei
 Previous measurements aren't good in some cases because:
 1. The amount of time a file takes to run can vary and change over time.
 2. If your test suite takes a long time to run, you at some point will need to run and measure all of the files in the suite - which can take quite a while.
+
+## Supported Test Frameworks
+
+Currently Detest only supports RSpec.
+
+## Outstanding Features
+
+Support for Cucumber is planned once RSpec support is stable.
