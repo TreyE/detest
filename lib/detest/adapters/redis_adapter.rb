@@ -3,6 +3,9 @@ require "redis"
 module Detest
   module Adapters
     class RedisAdapter
+      attr_reader :redis, :redis_session_key, :redis_session_failure_key,
+                  :redis_session_retry_key, :redis_session_runner_key
+
       def initialize(session_key, *args)
         @redis = Redis.new(*args)
         @redis_session_key = "__tp_adapter_test_storage_#{session_key}" 
@@ -11,15 +14,15 @@ module Detest
         @redis_session_retry_key = "__tp_adapter_test_retry_error_storage_#{session_key}"
       end
 
-      def record_runner
-        @redis.incr(@redis_session_runner_key)
+      def record_worker(pipeline = redis)
+        pipeline.incr(@redis_session_runner_key)
       end
 
-      def end_runner
-        decr = @redis.decr(@redis_session_runner_key)
+      def end_worker(pipeline = redis)
+        decr = pipeline.decr(@redis_session_runner_key)
         if decr < 1
-          @redis.rename(@redis_session_failure_key, @redis_session_retry_key)
-          @redis.del(@redis_session_runner_key)
+          pipeline.rename(@redis_session_failure_key, @redis_session_retry_key)
+          pipeline.del(@redis_session_runner_key)
         end
       end
 

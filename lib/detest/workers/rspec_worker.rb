@@ -14,13 +14,13 @@ module Detest
       end
 
       def run(adapter)
-        adapter.record_runner
+        adapter.record_worker
         if ENV["DETEST_RERUN"] == "true"
           run_failures(adapter)
         else
           run_until_empty(adapter)
         end
-        adapter.end_runner
+        adapter.end_worker
       end
 
       def run_failures(adapter)
@@ -43,7 +43,7 @@ module Detest
         if RSpec.world.wants_to_quit
           adapter.log_failure(spec)
           @reporter.finish
-          adapter.end_runner
+          adapter.end_worker
           exit(1)
         end
       end
