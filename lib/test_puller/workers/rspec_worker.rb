@@ -16,8 +16,16 @@ module TestPuller
       def run_until_empty(adapter)
         while spec = adapter.pop
           run_spec(spec)
+          bail?
         end
         finish
+      end
+
+      def bail?
+        if RSpec.world.wants_to_quit
+          @reporter.finish
+          exit(1)
+        end
       end
 
       def finish
@@ -31,10 +39,12 @@ module TestPuller
       end
 
       def run_spec(spec_path)
-        RSpec.reset
+        RSpec.world.reset
         @runner = RSpec::Core::Runner.new(@options, @configuration)
         @runner.configure($stderr, $stdout)
-        load(spec_path)
+        @configuration.instance_exec do
+          load_file_handling_errors(:load, spec_path)
+        end
         example_groups = @runner.world.example_groups
         examples_count = @runner.world.example_count(example_groups)
         @configuration.with_suite_hooks do
