@@ -1,6 +1,6 @@
 require 'rspec/core'
 
-module TestPuller
+module Detest
   module Workers
     class RspecWorker
       def initialize(args)
@@ -13,16 +13,33 @@ module TestPuller
         @passed = true
       end
 
-      def run_until_empty(adapter)
-        while spec = adapter.pop
-          run_spec(spec)
-          bail?
+      def run(adapter)
+        if ENV["DETEST_RERUN"] == "true"
+          run_failures(adapter)
+        else
+          run_until_empty(adapter)
+        end
+      end
+
+      def run_failures(adapter)
+        while spec = adapter.fpop
+          run_spec(adapter, spec)
+          bail?(adapter, spec)
         end
         finish
       end
 
-      def bail?
+      def run_until_empty(adapter)
+        while spec = adapter.pop
+          run_spec(adapter, spec)
+          bail?(adapter, spec)
+        end
+        finish
+      end
+
+      def bail?(adapter, spec)
         if RSpec.world.wants_to_quit
+          adapter.log_failure(spec)
           @reporter.finish
           exit(1)
         end
@@ -38,13 +55,14 @@ module TestPuller
         0
       end
 
-      def run_spec(spec_path)
+      def run_spec(adapter, spec_path)
         RSpec.world.reset
         @runner = RSpec::Core::Runner.new(@options, @configuration)
         @runner.configure($stderr, $stdout)
         @configuration.instance_exec do
           load_file_handling_errors(:load, spec_path)
         end
+        bail?(adapter, spec_path)
         example_groups = @runner.world.example_groups
         examples_count = @runner.world.example_count(example_groups)
         @configuration.with_suite_hooks do
@@ -52,7 +70,10 @@ module TestPuller
             return @configuration.failure_exit_code
           end
 
-          @passed = @passed && example_groups.map { |g| g.run(@reporter) }.all?
+          egs_passed = example_groups.map { |g| g.run(@reporter) }.all?
+          adapter.record_failure(spec) unless egs_passed
+
+          @passed = @passed && egs_passed
         end
       end
 

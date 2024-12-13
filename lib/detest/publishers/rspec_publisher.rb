@@ -1,6 +1,6 @@
 require 'rspec/core'
 
-module TestPuller
+module Detest
   module Publishers
     class RspecPublisher
       def initialize(args)

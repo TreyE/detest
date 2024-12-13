@@ -1,6 +1,6 @@
-require 'test_puller'
+require 'detest'
 
-adapter = TestPuller::Adapters::RedisAdapter.new("frank")
+adapter = Detest::Adapters::RedisAdapter.new("frank")
 
-client = TestPuller::Workers::RspecWorker.boot(ARGV)
-client.run_until_empty(adapter)
+client = Detest::Workers::RspecWorker.boot(ARGV)
+client.run(adapter)

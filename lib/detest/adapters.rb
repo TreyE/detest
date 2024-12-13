@@ -1,6 +1,6 @@
 require_relative "adapters/redis_adapter"
 
-module TestPuller
+module Detest
   module Adapters
   end
 end

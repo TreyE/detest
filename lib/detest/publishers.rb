@@ -1,6 +1,6 @@
 require_relative "publishers/rspec_publisher"
 
-module TestPuller
+module Detest
   module Publishers
   end
 end

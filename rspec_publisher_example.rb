@@ -1,6 +1,6 @@
-require 'test_puller'
+require 'detest'
 
-adapter = TestPuller::Adapters::RedisAdapter.new("frank")
+adapter = Detest::Adapters::RedisAdapter.new("frank")
 
-server = TestPuller::Publishers::RspecPublisher.new(ARGV)
+server = Detest::Publishers::RspecPublisher.new(ARGV)
 server.enqueue_specs(adapter)
