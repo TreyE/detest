@@ -6,7 +6,7 @@ namespace :self_test do
     cmd = "bundle exec ruby rspec_publisher_example.rb --require spec_helper.rb examples"
     PTY.spawn(cmd) do |stdout, stdin, pid|
       while (data = stdout.read(1))
-        #print data
+        print data
       end
     end
 
