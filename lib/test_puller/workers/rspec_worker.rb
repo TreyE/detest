@@ -1,8 +1,8 @@
 require 'rspec/core'
 
 module TestPuller
-  module Clients
-    class RspecClient
+  module Workers
+    class RspecWorker
       def initialize(args)
         @options = RSpec::Core::ConfigurationOptions.new(args)
         temp_runner = RSpec::Core::Runner.new(@options)

@@ -1,5 +1,5 @@
-require_relative "test_puller/clients"
-require_relative "test_puller/servers"
+require_relative "test_puller/publishers"
+require_relative "test_puller/workers"
 require_relative "test_puller/adapters"
 
 module TestPuller

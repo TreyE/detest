@@ -1,8 +1,8 @@
 require 'rspec/core'
 
 module TestPuller
-  module Servers
-    class RspecServer
+  module Publishers
+    class RspecPublisher
       def initialize(args)
         @options = RSpec::Core::ConfigurationOptions.new(args)
         temp_runner = RSpec::Core::Runner.new(@options)
