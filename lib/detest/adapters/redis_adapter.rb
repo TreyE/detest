@@ -21,8 +21,10 @@ module Detest
       def end_worker(pipeline = redis)
         decr = pipeline.decr(@redis_session_runner_key)
         if decr < 1
-          pipeline.rename(@redis_session_failure_key, @redis_session_retry_key)
-          pipeline.del(@redis_session_runner_key)
+          smem = pipeline.smembers(@redis_session_failure_key)
+          smem.each do |smember|
+            pipeline.smove(@redis_session_failure_key, @redis_session_retry_key, smember)
+          end
         end
       end
 
