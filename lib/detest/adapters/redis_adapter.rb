@@ -6,8 +6,8 @@ module Detest
       attr_reader :redis, :redis_session_key, :redis_session_failure_key,
                   :redis_session_retry_key, :redis_session_runner_key
 
-      def initialize(session_key, *args)
-        @redis = Redis.new(*args)
+      def initialize(session_key, *args, **kwargs)
+        @redis = Redis.new(*args, **kwargs)
         @redis_session_key = "__tp_adapter_test_storage_#{session_key}" 
         @redis_session_failure_key = "__tp_adapter_test_failure_storage_#{session_key}"
         @redis_session_runner_key = "__tp_adapter_test_runner_count_storage_#{session_key}"
