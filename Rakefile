@@ -10,14 +10,14 @@ namespace :self_test do
       end
     end
 
-    cmd = "bundle exec ruby rspec_worker_example.rb --require spec_helper.rb --format progress --force-color"
+    cmd = "bundle exec ruby rspec_worker_example.rb --require spec_helper.rb --format progress --force-color examples"
     PTY.spawn(cmd) do |stdout, stdin, pid|
       while (data = stdout.read(1))
         print data
       end
     end
 
-    cmd = "DETEST_RERUN=true bundle exec ruby rspec_worker_example.rb --require spec_helper.rb --format progress --force-color"
+    cmd = "DETEST_RERUN=true bundle exec ruby rspec_worker_example.rb --require spec_helper.rb --format progress --force-color examples"
     PTY.spawn(cmd) do |stdout, stdin, pid|
       while (data = stdout.read(1))
         print data

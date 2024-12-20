@@ -5,12 +5,21 @@ module Detest
     class RspecWorker
       def initialize(args)
         @options = RSpec::Core::ConfigurationOptions.new(args)
-        temp_runner = RSpec::Core::Runner.new(@options)
-        temp_runner.configure($stderr, $stdout)
-        @configuration = temp_runner.configuration
-        @reporter = temp_runner.configuration.reporter
+        @runner = RSpec::Core::Runner.new(@options)
+        @runner.configure($stderr, $stdout)
+        @configuration = @runner.configuration
+        @our_cwd = Dir.pwd
+        setup
+        @reporter = @runner.configuration.reporter
         @reporter.start(0)
         @passed = true
+      end
+
+      def setup
+        @configuration.load_spec_files
+
+        ensure
+        @runner.world.announce_filters
       end
 
       def run(adapter)
@@ -50,7 +59,7 @@ module Detest
 
       def finish(adapter)
         @reporter.finish
-        adapter.end_runner
+        adapter.end_worker
         exit(exit_code(@passed))
       end
 
@@ -60,14 +69,10 @@ module Detest
       end
 
       def run_spec(adapter, spec_path)
-        RSpec.world.reset
-        @runner = RSpec::Core::Runner.new(@options, @configuration)
-        @runner.configure($stderr, $stdout)
-        @configuration.instance_exec do
-          load_file_handling_errors(:load, spec_path)
+        example_groups = @runner.world.example_groups.select do |eg|
+          Pathname(File.expand_path(eg.file_path)).relative_path_from(@our_cwd).to_s == spec_path
         end
-        bail?(adapter, spec_path)
-        example_groups = @runner.world.example_groups
+
         examples_count = @runner.world.example_count(example_groups)
         @configuration.with_suite_hooks do
           if examples_count == 0 && @configuration.fail_if_no_examples
@@ -75,7 +80,7 @@ module Detest
           end
 
           egs_passed = example_groups.map { |g| g.run(@reporter) }.all?
-          adapter.record_failure(spec_path) unless egs_passed
+          adapter.log_failure(spec_path) unless egs_passed
 
           @passed = @passed && egs_passed
         end
