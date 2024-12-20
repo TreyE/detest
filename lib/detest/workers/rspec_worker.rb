@@ -75,7 +75,7 @@ module Detest
           end
 
           egs_passed = example_groups.map { |g| g.run(@reporter) }.all?
-          adapter.record_failure(spec) unless egs_passed
+          adapter.record_failure(spec_path) unless egs_passed
 
           @passed = @passed && egs_passed
         end
