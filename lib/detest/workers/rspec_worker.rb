@@ -17,17 +17,18 @@ module Detest
 
       def setup
         @configuration.load_spec_files
-
-        ensure
+      ensure
         @runner.world.announce_filters
       end
 
       def run(adapter)
         adapter.record_worker
-        if ENV["DETEST_RERUN"] == "true"
-          run_failures(adapter)
-        else
-          run_until_empty(adapter)
+        @configuration.with_suite_hooks do
+          if ENV["DETEST_RERUN"] == "true"
+            run_failures(adapter)
+          else
+            run_until_empty(adapter)
+          end
         end
         adapter.end_worker
       end
@@ -74,16 +75,11 @@ module Detest
         end
 
         examples_count = @runner.world.example_count(example_groups)
-        @configuration.with_suite_hooks do
-          if examples_count == 0 && @configuration.fail_if_no_examples
-            return @configuration.failure_exit_code
-          end
 
-          egs_passed = example_groups.map { |g| g.run(@reporter) }.all?
-          adapter.log_failure(spec_path) unless egs_passed
+        egs_passed = example_groups.map { |g| g.run(@reporter) }.all?
+        adapter.log_failure(spec_path) unless egs_passed
 
-          @passed = @passed && egs_passed
-        end
+        @passed = @passed && egs_passed
       end
 
       def self.boot(args)
