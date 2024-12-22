@@ -70,6 +70,7 @@ module Detest
       end
 
       def run_spec(adapter, spec_path)
+        start_time = Time.now
         example_groups = @runner.world.example_groups.select do |eg|
           Pathname(File.expand_path(eg.file_path)).relative_path_from(@our_cwd).to_s == spec_path
         end
@@ -77,6 +78,15 @@ module Detest
         examples_count = @runner.world.example_count(example_groups)
 
         egs_passed = example_groups.map { |g| g.run(@reporter) }.all?
+        end_time = Time.now
+        time_elapsed = end_time - start_time
+        adapter.log_result(
+          spec_path,
+          egs_passed,
+          {
+            duration: time_elapsed
+          }
+        )
         adapter.log_failure(spec_path) unless egs_passed
 
         @passed = @passed && egs_passed

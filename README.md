@@ -13,6 +13,10 @@ Previous measurements aren't good in some cases because:
 1. The amount of time a file takes to run can vary and change over time.
 2. If your test suite takes a long time to run, you at some point will need to run and measure all of the files in the suite - which can take quite a while.
 
+Added bonuses of this approach:
+1. You can augment and upgrade the testing approach, including adding measurement instrumentation, just by upgrading the adapter.  You need do nothing to your code, just upgrade the gem.
+2. The since the adapter handles how work is divided, changes in testing strategy can be adapted in the gem with no change to the target project source code.
+
 ## Supported Test Frameworks
 
 Currently Detest only supports RSpec.

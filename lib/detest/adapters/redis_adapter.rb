@@ -1,4 +1,5 @@
 require "redis"
+require "json"
 
 module Detest
   module Adapters
@@ -8,10 +9,11 @@ module Detest
 
       def initialize(session_key, *args, **kwargs)
         @redis = Redis.new(*args, **kwargs)
-        @redis_session_key = "__tp_adapter_test_storage_#{session_key}" 
-        @redis_session_failure_key = "__tp_adapter_test_failure_storage_#{session_key}"
-        @redis_session_runner_key = "__tp_adapter_test_runner_count_storage_#{session_key}"
-        @redis_session_retry_key = "__tp_adapter_test_retry_error_storage_#{session_key}"
+        @redis_session_key = "__#{session_key}_tp_adapter_test_storage" 
+        @redis_session_failure_key = "__#{session_key}_tp_adapter_test_failure_storage"
+        @redis_session_result_key = "__#{session_key}_tp_adapter_test_results_storage"
+        @redis_session_runner_key = "__#{session_key}_tp_adapter_test_runner_count_storage"
+        @redis_session_retry_key = "__#{session_key}_tp_adapter_test_retry_error_storage"
       end
 
       def record_worker(pipeline = redis)
@@ -40,6 +42,14 @@ module Detest
 
       def log_failure(spec_file)
         @redis.sadd(@redis_session_failure_key, [spec_file])
+      end
+
+      def log_result(spec_file, result, props = {})
+        logged_payload = props.merge({
+          test: spec_file,
+          passed: result
+        })
+        @redis.sadd(@redis_session_result_key, JSON.dump(logged_payload))
       end
 
       def fpop
