@@ -1,4 +1,4 @@
-require_relative "adapters/redis_adapter" if defined?(RSpec)
+require_relative "adapters/redis_adapter"
 
 module Detest
   module Adapters
