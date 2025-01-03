@@ -1,4 +1,4 @@
-require_relative "workers/rspec_worker"
+require_relative "workers/rspec_worker" if Detest::FrameworkSupport.rspec_available?
 
 module Detest
   module Workers
