@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Trey Evans"]
   s.email       = "lewis.r.evans@gmail.com"
   s.files       = Dir['lib/**/*.rb']
-  s.license     = "CC BY-NC-ND 4.0"
+  s.license     = "CC-BY-NC-ND-4.0"
 
   s.add_dependency "redis"
 end

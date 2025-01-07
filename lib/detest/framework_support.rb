@@ -9,6 +9,11 @@ module Detest
         @@rspec_support = true
       rescue LoadError
       end
+      begin
+        require "cucumber"
+        @@cucumber_support = true
+      rescue LoadError
+      end
     end
 
     def self.rspec_available?
