@@ -4,8 +4,7 @@ if cucumber_version < cucumber_4_x_version
   require_relative "cucumber_3_x/cli"
   require_relative "cucumber_3_x/runtime"
 else
-  require_relative "cucumber/cli"
-  require_relative "cucumber/runtime"
+  raise NotImplementedError, "this version of cucumber not supported"
 end
 
 module Detest

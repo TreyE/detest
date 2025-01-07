@@ -12,7 +12,7 @@ module Detest
                       existing_runtime.configure(configuration)
                       existing_runtime
                     else
-                      ::Detest::Workers::Cucumber::Runtime.new(configuration)
+                      ::Detest::Workers::Cucumber::Runtime.new(configuration.to_hash.merge(:event_bus => Detest::Workers::Cucumber::EventBus.make_event_bus))
                     end
   
           runtime.run!(adapter)
