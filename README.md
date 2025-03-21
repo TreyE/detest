@@ -21,8 +21,12 @@ Added bonuses of this approach:
 
 ## Supported Test Frameworks
 
-Currently Detest only supports RSpec.
+Currently Detest only supports RSpec and select Cucumber versions.
 
 ## Outstanding Features
 
 Support for Cucumber is planned once RSpec support is stable.
+
+## Licenses
+
+Entities granted a license other than the CC based license are provided under the `licenses` directory.
