@@ -6,6 +6,8 @@ module Detest
       def self.run!(adapter, args)
         cli = Detest::Publishers::Cucumber::Cli.new(args)
         cli.execute!(adapter)
+      ensure
+        adapter.close
       end
     end
   end

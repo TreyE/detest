@@ -14,6 +14,8 @@ module Detest
         sf = spec_files
         puts spec_files.inspect
         adapter.enqueue(spec_files)
+      ensure
+        adapter.close
       end
 
       def spec_files
