@@ -30,6 +30,8 @@ module Detest
             run_until_empty(adapter)
           end
         end
+      ensure
+        adapter.close
       end
 
       def run_failures(adapter)

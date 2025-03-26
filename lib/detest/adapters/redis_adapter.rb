@@ -16,6 +16,10 @@ module Detest
         @redis_session_retry_key = "__#{session_key}_tp_adapter_test_retry_error_storage"
       end
 
+      def close
+        @redis.quit
+      end
+
       def record_worker(pipeline = redis)
         pipeline.incr(@redis_session_runner_key)
       end
