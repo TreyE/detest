@@ -17,7 +17,7 @@ module Detest
       end
 
       def close
-        @redis.quit
+        @redis.disconnect!
       end
 
       def record_worker(pipeline = redis)
