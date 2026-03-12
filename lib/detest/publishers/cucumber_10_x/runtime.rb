@@ -6,7 +6,7 @@ module Detest
     module Cucumber
       class Runtime < ::Cucumber::Runtime
         def run!(adapter)
-          @configuration.notify :envelope, Cucumber::Messages::Envelope.new(
+          @configuration.notify :envelope, ::Cucumber::Messages::Envelope.new(
             meta: MetaMessageBuilder.build_meta_message
           )
 
