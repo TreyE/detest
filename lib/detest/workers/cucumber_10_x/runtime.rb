@@ -33,9 +33,10 @@ module Detest
 
         def run!(adapter)
           @adapter = adapter
+
           load_step_definitions
-          install_wire_plugin
-          fire_after_configuration_hook
+          fire_install_plugin_hook
+          fire_before_all_hook unless dry_run?
           # TODO: can we remove this state?
           self.visitor = report
     
@@ -58,14 +59,14 @@ module Detest
               while f_file = adapter.fpop
                 @configuration.notify :test_file_started, f_file
                 fs = process_feature_file(f_file)
-                compile fs, receiver, filters
+                compile fs, receiver, filters, @configuration.event_bus
                 @configuration.notify :test_file_finished, f_file
               end
             else
               while f_file = adapter.pop
                 @configuration.notify :test_file_started, f_file
                 fs = process_feature_file(f_file)
-                compile fs, receiver, filters
+                compile fs, receiver, filters, @configuration.event_bus
                 @configuration.notify :test_file_finished, f_file
               end
           end
