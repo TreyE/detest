@@ -1,4 +1,5 @@
 require "cucumber/runtime"
+require "cucumber/messages"
 
 module Detest
   module Publishers
