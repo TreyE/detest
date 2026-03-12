@@ -5,9 +5,12 @@ module Detest
     module Cucumber
       class Runtime < ::Cucumber::Runtime
         def run!(adapter)
+          @configuration.notify :envelope, Cucumber::Messages::Envelope.new(
+            meta: MetaMessageBuilder.build_meta_message
+          )
+
           load_step_definitions
-          install_wire_plugin
-          fire_after_configuration_hook
+          fire_install_plugin_hook
 
           adapter.enqueue(feature_file_paths)
         end
