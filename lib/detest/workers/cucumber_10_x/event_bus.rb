@@ -1,3 +1,5 @@
+require "cucumber/events"
+
 module Detest
   module Workers
     module Cucumber
@@ -15,18 +17,25 @@ module Detest
         end
     
         def self.registry
-        ::Cucumber::Core::Events.build_registry(
-          ::Cucumber::Core::Events::TestCaseStarted,
-          ::Cucumber::Core::Events::TestCaseFinished,
-          ::Cucumber::Core::Events::TestStepFinished,
-          ::Cucumber::Events::TestStepStarted,
-          ::Cucumber::Events::StepDefinitionRegistered,
-          ::Cucumber::Events::StepActivated,
-          ::Cucumber::Events::TestRunFinished,
-          ::Cucumber::Events::GherkinSourceRead,
-          ::Cucumber::Events::TestRunStarted,
-          TestFileStarted,
-          TestFileFinished
+          ::Cucumber::Core::Events.build_registry(
+            ::Cucumber::Events::GherkinSourceParsed,
+            ::Cucumber::Events::GherkinSourceRead,
+            ::Cucumber::Events::HookTestStepCreated,
+            ::Cucumber::Events::StepActivated,
+            ::Cucumber::Events::StepDefinitionRegistered,
+            ::Cucumber::Events::TestCaseCreated,
+            ::Cucumber::Events::TestCaseFinished,
+            ::Cucumber::Events::TestCaseStarted,
+            ::Cucumber::Events::TestCaseReady,
+            ::Cucumber::Events::TestRunFinished,
+            ::Cucumber::Events::TestRunStarted,
+            ::Cucumber::Events::TestStepCreated,
+            ::Cucumber::Events::TestStepFinished,
+            ::Cucumber::Events::TestStepStarted,
+            ::Cucumber::Events::Envelope,
+            ::Cucumber::Events::UndefinedParameterType,
+            TestFileStarted,
+            TestFileFinished
           )
         end
       end
