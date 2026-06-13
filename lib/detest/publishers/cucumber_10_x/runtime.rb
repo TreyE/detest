@@ -1,0 +1,34 @@
+require "cucumber/runtime"
+require "cucumber/messages"
+
+module Detest
+  module Publishers
+    module Cucumber
+      class Runtime < ::Cucumber::Runtime
+        def run!(adapter)
+          @configuration.notify :envelope, ::Cucumber::Messages::Envelope.new(
+            meta: MetaMessageBuilder.build_meta_message
+          )
+
+          load_step_definitions
+          fire_install_plugin_hook
+
+          adapter.enqueue(feature_file_paths)
+        end
+
+        def feature_file_paths
+          our_cwd = Dir.pwd
+          feature_files.map do |s_file|
+            s_path = Pathname(s_file)
+            if s_path.absolute?
+              s_path.relative_path_from(our_cwd).to_s
+            else
+              s_full_path = Pathname(our_cwd) + s_path
+              s_full_path.relative_path_from(our_cwd).to_s
+            end
+          end
+        end
+      end
+    end
+  end
+end
